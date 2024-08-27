@@ -25,12 +25,19 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
             'role' => 'user',
         ]);
-        
+
         User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('password'),
             'role' => 'admin',
+        ]);
+
+        User::create([
+            'name' => 'MAGINSURANCE',
+            'email' => 'maginsurance-api-test@gmail.com',
+            'password' => bcrypt('M@g1nsur@nceH3@lth!S3cur3&Pr0t3ct#'),
+            'role' => 'api-user',
         ]);
     }
 }

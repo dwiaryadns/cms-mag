@@ -35,6 +35,18 @@
                             <input type="text" class="form-control" name="link_url" id="link_url"
                                 placeholder="Link URL">
                         </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="">Start Date</label>
+                                <input type="date" class="form-control" name="start_date" id="start_date"
+                                    placeholder="Link URL">
+                            </div>
+                            <div class="col">
+                                <label for="">End Date</label>
+                                <input type="date" class="form-control" name="end_date" id="end_date"
+                                    placeholder="Link URL">
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <label for="">Image</label>
                             <input type="file" class="form-control" name="image" id="image" required>
@@ -80,6 +92,7 @@
                             <th>Title</th>
                             <th>Author</th>
                             <th>Image</th>
+                            <th>Date</th>
                             <th style="width: 500px">Description</th>
                             <th>Action</th>
                         </tr>
@@ -133,6 +146,7 @@
                 { data: 'title', name: 'title'},
                 { data: 'author', name: 'author'},
                 { data: 'image', name: 'image'},
+                { data: 'date', name: 'date'},
                 { data: 'description', name: 'description'},
                 { data: 'action', name: 'action'},
             ]
@@ -141,7 +155,6 @@
         $('#addPromotion').click(function () {
             $('#savedata').data("action", "create-promotion");
             $('#id').val('');
-            // $('#form').trigger("reset");
             $('#modal-title').html("Add Promotion");
             $('#modal').modal('show');
         });
@@ -165,6 +178,8 @@
                 $('#title').val(data.title);
                 $('#author').val(data.author);
                 $('#link_url').val(data.link_url);
+                $('#start_date').val(data.start_date);
+                $('#end_date').val(data.end_date);
                 $("#description").summernote("code",data.description);
             })
         });
@@ -173,11 +188,13 @@
             e.preventDefault();
             $(this).html('Sending..');
             var formData = new FormData();
-            var imageFile = $('#image')[0].files[0]; // Ambil file gambar dari input
+            var imageFile = $('#image')[0].files[0]; 
             formData.append('id', $("#id").val());
             formData.append('title', $("#title").val());
             formData.append('author', $("#author").val());
             formData.append('link_url', $("#link_url").val());
+            formData.append('start_date', $("#start_date").val());
+            formData.append('end_date', $("#end_date").val());
             formData.append('image', imageFile);
             if($('#description').summernote('isEmpty')) {
                 console.log('contents is empty, fill it!');
@@ -256,5 +273,8 @@
                 }
             });
         });
+</script>
+<script>
+
 </script>
 @endsection

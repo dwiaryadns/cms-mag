@@ -15,9 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('author');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->string('link_url')->nullable();
             $table->string('image');
             $table->longText('description');
+            $table->longText('group_id')->nullable();
+            $table->longText('polis_id')->nullable();
+            $table->longText('member_id')->nullable();
             $table->timestamps();
         });
     }
