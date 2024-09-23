@@ -12,7 +12,7 @@
             </li>
         </ol>
     </nav>
-    <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -30,11 +30,6 @@
                             <label for="">Author</label>
                             <input type="text" class="form-control" name="author" id="author" placeholder="Author">
                         </div>
-                        <div class="mb-3">
-                            <label for="">Link URL</label>
-                            <input type="text" class="form-control" name="link_url" id="link_url"
-                                placeholder="Link URL">
-                        </div>
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="">Start Date</label>
@@ -51,6 +46,36 @@
                             <label for="">Image</label>
                             <input type="file" class="form-control" name="image" id="image" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="">Search Group</label>
+                            <div class="d-flex">
+                                <input type="text" class="form-control" name="groupNameId" id="groupNameId"
+                                    placeholder="Search Group">
+                                <button class="btn btn-primary" id="btn-search-group" type="button"><i
+                                        class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="">Group</label>
+                            <select id="groupId" class="form-control" style="width: 100%" multiple="multiple"
+                                name="groups[]">
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="">Policy No</label>
+                            <select id="policyNo" class="form-control" style="width: 100%" multiple="multiple"
+                                name="policyNo[]">
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="">Member</label>
+                            <select id="memberId" class="form-control" style="width: 100%" multiple="multiple"
+                                name="memberId[]">
+                            </select>
+                        </div>
+
                         <div class="mb-3">
                             <label for="">Description</label>
                             <textarea type="text" class="form-control" name="description" id="description"></textarea>
@@ -105,6 +130,345 @@
     </div>
 </section>
 @endsection
+@push('scripts')
+{{-- <script>
+    $(document).ready(function() {
+        $('#groupId').select2({
+            placeholder: 'Select groups',
+            allowClear: true,
+            dropdownParent: $("#modal")
+        });
+        $('#policyNo').select2({
+            placeholder: 'Select Policy No',
+            allowClear: true,
+            dropdownParent: $("#modal")
+        });
+        $('#memberId').select2({
+            placeholder: 'Select Member',
+            allowClear: true,
+            dropdownParent: $("#modal")
+        });
+
+        $("#btn-search-group").click(function() {
+            var search = $("#groupNameId").val();
+            $.ajax({
+                url: "{{ route('admin.indotek.getGroupList') }}",
+                method: "POST",
+                data: { groupName: search },
+                success: function(data) {
+                    var selectedGroups = $("#groupId").val() || []; 
+                    var results = JSON.parse(data.decrypt);
+                    console.log(results);
+                    $("#groupId").find('option').each(function() {
+                        if (!selectedGroups.includes($(this).val())) {
+                            $(this).remove();
+                        }
+                    });
+
+                    $.each(results, function(index, value) {
+                        if (!$("#groupId option[value='" + value.GroupId + "']").length) {
+                            $("#groupId").append(new Option(value.GroupName+" - "+value.GroupId, value.GroupId));
+                        }
+                    });
+
+                    $("#groupId").trigger('change');
+
+                }
+            });
+        });
+
+        $('#groupId').on('change', function() {
+            var selectedGroupIds = $(this).val(); 
+            $("#policyNo").empty();
+            if (selectedGroupIds && selectedGroupIds.length > 0) {
+                $.each(selectedGroupIds, function(index, groupId) {
+                    console.log(groupId)
+                    $.ajax({
+                        url: "{{ route('admin.indotek.getGroupPolList') }}", 
+                        method: "POST",
+                        data: { groupId: groupId }, 
+                        success: function(response) {
+                            const results = JSON.parse(response.decrypt)
+                            console.log(results);
+                            $.each(results, function(index, value) {
+                                $("#policyNo").append(new Option(value.BranchId+ " - " + value.PolicyNo, value.PolicyNo));
+                            });
+                            $("#policyNo").trigger('change');
+                        }
+                    });
+                });
+            }
+        });
+
+        $("#policyNo").on('change', function(){ 
+            var selectedGroupIds = $('#groupId').val(); 
+            var selectedPolicyNos = $(this).val(); 
+            
+            if (selectedGroupIds && selectedPolicyNos) {
+                $.ajax({
+                    url: "{{ route('admin.indotek.getGroupPolicyUserList') }}", 
+                    method: "POST",
+                    data: {
+                        groupId: selectedGroupIds, 
+                        policyNo: selectedPolicyNos
+                    },
+                    success: function(response) {
+                        const results = JSON.parse(response.decrypt)
+                        console.log('user list')
+                        console.log(results);
+                        $.each(results, function(index, value) {
+                            $("#memberId").append(new Option(value.BranchId+ " - " + value.PolicyNo, value.PolicyNo));
+                        });
+                        $("#memberId").trigger('change');
+                    }
+                });
+            }
+        });
+    });
+</script> --}}
+{{-- <script>
+    $(document).ready(function() {
+        // Initialize Select2 for groups, policy numbers, and members
+        $('#groupId').select2({
+            placeholder: 'Select groups',
+            allowClear: true,
+            dropdownParent: $("#modal")
+        });
+        $('#policyNo').select2({
+            placeholder: 'Select Policy No',
+            allowClear: true,
+            dropdownParent: $("#modal")
+        });
+        $('#memberId').select2({
+            placeholder: 'Select Member',
+            allowClear: true,
+            dropdownParent: $("#modal")
+        });
+
+        // Handle search group functionality
+        $("#btn-search-group").click(function() {
+            var search = $("#groupNameId").val();
+            $.ajax({
+                url: "{{ route('admin.indotek.getGroupList') }}",
+                method: "POST",
+                data: { groupName: search },
+                success: function(data) {
+                    var selectedGroups = $("#groupId").val() || [];
+                    var results = JSON.parse(data.decrypt);
+                    console.log(results);
+
+                    // Remove groups not in selectedGroups
+                    $("#groupId").find('option').each(function() {
+                        if (!selectedGroups.includes($(this).val())) {
+                            $(this).remove();
+                        }
+                    });
+
+                    // Add new groups to the select
+                    $.each(results, function(index, value) {
+                        if (!$("#groupId option[value='" + value.GroupId + "']").length) {
+                            $("#groupId").append(new Option(value.GroupName+" - "+value.GroupId, value.GroupId));
+                        }
+                    });
+
+                    $("#groupId").trigger('change');
+                }
+            });
+        });
+
+        // Handle group selection change
+        $('#groupId').on('change', function() {
+            var selectedGroupIds = $(this).val(); 
+            $("#policyNo").empty();
+            if (selectedGroupIds && selectedGroupIds.length > 0) {
+                $.each(selectedGroupIds, function(index, groupId) {
+                    console.log(groupId)
+                    $.ajax({
+                        url: "{{ route('admin.indotek.getGroupPolList') }}", 
+                        method: "POST",
+                        data: { groupId: groupId }, 
+                        success: function(response) {
+                            const results = JSON.parse(response.decrypt);
+                            console.log(results);
+
+                            // Add policies for selected groupId to the select
+                            $.each(results, function(index, value) {
+                                $("#policyNo").append(new Option(value.BranchId + " - " + value.PolicyNo, JSON.stringify({
+                                    policyNo: value.PolicyNo,
+                                    groupId: groupId
+                                })));
+                            });
+
+                            $("#policyNo").trigger('change');
+                        }
+                    });
+                });
+            }
+        });
+
+        // Handle policy number selection change
+        $("#policyNo").on('change', function() { 
+            var selectedGroupIds = $('#groupId').val(); 
+            var selectedPolicy = $(this).val(); 
+
+            if (selectedPolicy) {
+                var policyData = JSON.parse(selectedPolicy);
+                console.log(policyData);
+                var selectedPolicyNo = policyData.policyNo;
+                var policyGroupId = policyData.groupId;
+
+                if (selectedGroupIds.includes(policyGroupId)) {
+                    $.ajax({
+                        url: "{{ route('admin.indotek.getGroupPolicyUserList') }}", 
+                        method: "POST",
+                        data: {
+                            groupId: policyGroupId, 
+                            policyNo: selectedPolicyNo 
+                        },
+                        success: function(response) {
+                            const results = JSON.parse(response.decrypt);
+                            console.log('user list');
+                            console.log(results);
+
+                            $.each(results, function(index, value) {
+                                $("#memberId").append(new Option(value.Name + " - " + value.MemberID, value.MemberID));
+                            });
+
+                            $("#memberId").trigger('change');
+                        }
+                    });
+                } else {
+                    console.log("Selected PolicyNo does not match the selected GroupId.");
+                }
+            }
+        });
+    });
+</script> --}}
+
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 for groups, policy numbers, and members
+        $('#groupId').select2({
+            placeholder: 'Select groups',
+            allowClear: true,
+            dropdownParent: $("#modal")
+        });
+        $('#policyNo').select2({
+            placeholder: 'Select Policy No',
+            allowClear: true,
+            dropdownParent: $("#modal")
+        });
+        $('#memberId').select2({
+            placeholder: 'Select Member',
+            allowClear: true,
+            dropdownParent: $("#modal")
+        });
+
+        // Handle search group functionality
+        $("#btn-search-group").click(function() {
+            var search = $("#groupNameId").val();
+            $.ajax({
+                url: "{{ route('admin.indotek.getGroupList') }}",
+                method: "POST",
+                data: { groupName: search },
+                success: function(data) {
+                    var selectedGroups = $("#groupId").val() || [];
+                    var results = JSON.parse(data.decrypt);
+                    console.log(results);
+
+                    // Remove groups not in selectedGroups
+                    $("#groupId").find('option').each(function() {
+                        if (!selectedGroups.includes($(this).val())) {
+                            $(this).remove();
+                        }
+                    });
+
+                    // Add new groups to the select
+                    $.each(results, function(index, value) {
+                        if (!$("#groupId option[value='" + value.GroupId + "']").length) {
+                            $("#groupId").append(new Option(value.GroupName+" - "+value.GroupId, value.GroupId));
+                        }
+                    });
+
+                    $("#groupId").trigger('change');
+                }
+            });
+        });
+
+        // Handle group selection change
+        $('#groupId').on('change', function() {
+            var selectedGroupIds = $(this).val(); 
+            $("#policyNo").empty();
+            if (selectedGroupIds && selectedGroupIds.length > 0) {
+                $.each(selectedGroupIds, function(index, groupId) {
+                    console.log(groupId)
+                    $.ajax({
+                        url: "{{ route('admin.indotek.getGroupPolList') }}", 
+                        method: "POST",
+                        data: { groupId: groupId }, 
+                        success: function(response) {
+                            const results = JSON.parse(response.decrypt);
+                            console.log(results);
+
+                            $.each(results, function(index, value) {
+                                $("#policyNo").append(new Option(value.BranchId + " - " + value.PolicyNo, JSON.stringify({
+                                    policyNo: value.PolicyNo,
+                                    groupId: groupId
+                                })));
+                            });
+
+                            $("#policyNo").trigger('change');
+                        }
+                    });
+                });
+            }
+        });
+
+        $("#policyNo").on('change', function() { 
+            var selectedGroupIds = $('#groupId').val(); 
+            var selectedPolicyNos = $(this).val(); 
+
+            $("#memberId").empty(); 
+
+            if (selectedPolicyNos && selectedPolicyNos.length > 0) {
+                $.each(selectedPolicyNos, function(index, selectedPolicy) {
+                    var policyData = JSON.parse(selectedPolicy);
+                    var selectedPolicyNo = policyData.policyNo;
+                    var policyGroupId = policyData.groupId;
+
+                    if (selectedGroupIds.includes(policyGroupId)) {
+                        $.ajax({
+                            url: "{{ route('admin.indotek.getGroupPolicyUserList') }}", 
+                            method: "POST",
+                            data: {
+                                groupId: policyGroupId, 
+                                policyNo: selectedPolicyNo 
+                            },
+                            success: function(response) {
+                                const results = JSON.parse(response.decrypt);
+                                console.log('user list');
+                                console.log(results);
+
+                                $.each(results, function(index, value) {
+                                    console.log('value : ' + value);
+                                    if (!$("#memberId option[value='" + value.PolicyNo + "']").length) {
+                                        $("#memberId").append(new Option(value.Name + " - " + value.MemberID, value.MemberID));
+                                    }
+                                });
+
+                                $("#memberId").trigger('change');
+                            }
+                        });
+                    } else {
+                        console.log("Selected PolicyNo does not match the selected GroupId.");
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+@endpush
 @section('js')
 <script type="text/javascript">
     $.ajaxSetup({
@@ -116,7 +480,7 @@
     var myEditor;
 
     $(document).ready(function() {
-        $('#description').summernote(  {
+        $('#description').summernote({
         placeholder: 'Description',
         tabsize: 2,
         height: 120,
@@ -195,6 +559,9 @@
             formData.append('link_url', $("#link_url").val());
             formData.append('start_date', $("#start_date").val());
             formData.append('end_date', $("#end_date").val());
+            formData.append('group_id', $("#groupId").val());
+            formData.append('polis_id', $("#policyNo").val());
+            formData.append('member_id', $("#memberId").val());
             formData.append('image', imageFile);
             if($('#description').summernote('isEmpty')) {
                 console.log('contents is empty, fill it!');
@@ -273,8 +640,5 @@
                 }
             });
         });
-</script>
-<script>
-
 </script>
 @endsection

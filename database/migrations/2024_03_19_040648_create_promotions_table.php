@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('author');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->string('link_url')->nullable();
+            // $table->string('link_url')->nullable();
             $table->string('image');
             $table->longText('description');
             $table->longText('group_id')->nullable();

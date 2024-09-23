@@ -12,7 +12,7 @@ class Promotion extends Model
     protected $fillable = [
         'title',
         'author',
-        'link_url',
+        // 'link_url',
         'description',
         'image',
         'start_date',

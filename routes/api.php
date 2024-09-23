@@ -23,3 +23,4 @@ Route::post('/v1/decrypt', [ApiIndotekController::class, 'decrypt']);
 Route::post('/v1/sessionId', [ApiIndotekController::class, 'getSessionId']);
 Route::post('/v1/GetGroupList', [ApiIndotekController::class, 'getGroupList']);
 Route::post('/v1/GetGroupPolList', [ApiIndotekController::class, 'getGroupPolList']);
+Route::post('/v1/GetGroupPolicyUserList', [ApiIndotekController::class, 'getGroupPolicyUserList']);

@@ -170,7 +170,7 @@
 
         $('#savedata').click(function (e) {
         e.preventDefault();
-        
+
         $(this).html('Sending..');
         var formData = new FormData();
         var imageFile = $('#image')[0].files[0]; // Ambil file gambar dari input
@@ -186,16 +186,14 @@
         } else {
             formData.append('description', $('#description').summernote('code'));
         }
-
         $.ajax({
             data:formData,
-            processData: false, // Set false agar jQuery tidak memproses data
+            processData: false, 
             contentType: false,
             url: "{{ route('admin.news.store') }}",
             type: "POST",
             dataType: 'json',
             success: function (data) {
-                console.log(data)
                 $('#form').trigger("reset");
                 $('#savedata').html("Save");
                 $('#modal').modal('hide');
@@ -212,6 +210,7 @@
         },
         error: function (xhr, status, error) {
                 console.log(xhr.responseJSON);
+                console.log(error)
                 $('#savedata').html('Save');
 
                 var errors = xhr.responseJSON.errors;

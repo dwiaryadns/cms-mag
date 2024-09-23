@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css">
-    
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
     <script src="/assets/vendor/js/helpers.js"></script>
     <script src="/assets/js/config.js"></script>
@@ -49,6 +49,11 @@
             /* Block images */
             max-width: 80%;
             margin: 20px auto;
+        }
+
+        .dropdown-toggle {
+            height: 40px;
+            width: 400px !important;
         }
     </style>
 </head>
@@ -117,8 +122,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">John Doe</span>
-                                                    <small class="text-muted">Admin</small>
+                                                    <span class="fw-semibold d-block">{{ \Auth::user()->name }}</span>
+                                                    <small class="text-muted">{{ \Auth::user()->role }}</small>
                                                 </div>
                                             </div>
                                         </a>
@@ -168,7 +173,9 @@
     <script src="/assets/js/main.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @yield('js')
+    @stack('scripts')
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 

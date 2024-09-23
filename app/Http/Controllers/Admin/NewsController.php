@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use Str;
 
@@ -52,7 +53,6 @@ class NewsController extends Controller
             'image'=> 'required|mimes:jpg,png,jpeg,svg',
             'description'=> 'required'
         ]);
-        $tes = '';
         $imagePath = null;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -62,6 +62,7 @@ class NewsController extends Controller
         } else {
             $imagePath = News::find($request->id)->image;
         }
+        Log::info($request->all);
         $news = News::updateOrCreate(
             ['id' => $request->id],
             [
@@ -85,7 +86,7 @@ class NewsController extends Controller
         if ($news->image) {
             $imagePath = public_path($news->image);
             if (file_exists($imagePath)) {
-                unlink($imagePath); 
+                unlink($imagePath);
             }
         }
         $news->delete();
