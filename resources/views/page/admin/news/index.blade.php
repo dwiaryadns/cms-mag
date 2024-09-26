@@ -81,6 +81,7 @@
                             <th>Author</th>
                             <th>Image</th>
                             <th style="width: 500px">Description</th>
+                            <th>Active</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -103,6 +104,28 @@
     var myEditor;
 
     $(document).ready(function() {
+        // Handle toggle switch change
+        $('.table').on('change', '.toggle-status', function () {
+            var newsId = $(this).data('id');
+            var isActive = $(this).is(':checked');
+
+            $.ajax({
+                url: '{{ route("admin.news.toggleStatus") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: newsId,
+                    is_active: isActive
+                },
+                success: function (response) {
+                    alert(response.success); 
+                },
+                error: function (error) {
+                    console.log(error)
+                    alert('Error occurred while updating status.');
+                }
+            });
+        });
         $('#description').summernote(  {
         placeholder: 'Description',
         tabsize: 2,
@@ -133,6 +156,7 @@
                 { data: 'author', name: 'author'},
                 { data: 'image', name: 'image'},
                 { data: 'description', name: 'description'},
+                { data: 'is_active', name: 'is_active'},
                 { data: 'action', name: 'action'},
             ]
         })

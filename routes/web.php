@@ -70,6 +70,7 @@ Route::prefix('admin')->middleware(['auth', 'can:isAdmin'])->name('admin.')->gro
         Route::post('/store', [App\Http\Controllers\Admin\NewsController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [App\Http\Controllers\Admin\NewsController::class, 'edit'])->name('edit');
         Route::delete('/{id}/delete', [App\Http\Controllers\Admin\NewsController::class, 'destroy'])->name('delete');
+        Route::post('/admin/news/toggle-status', [App\Http\Controllers\Admin\NewsController::class, 'toggleStatus'])->name('toggleStatus');
     });
 });
 Route::prefix('marketing')->middleware(['auth', 'can:isMarketing'])->name('marketing.')->group(function () {

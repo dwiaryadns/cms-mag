@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('link_url')->nullable();
             $table->string('image');
             $table->longText('description');
+            $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
     }
