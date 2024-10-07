@@ -32,7 +32,7 @@ class NewsController extends Controller
                 })
                 ->rawColumns(['description'])
                 ->addColumn('image', function ($row) {
-                    return '<img width="200" src="' . url($this->decryptAESCryptoJS($row->image, env('SECRET_KEY_INDOTEK_KEY'))) . '"/>';
+                    return '<img width="200" src="' . url($this->decryptAESCryptoJS($row->image, env('SECRET_KEY_INDOTEK=='))) . '"/>';
                 })
                 ->rawColumns(['image'])
                 ->addColumn('is_active', function ($row) {
@@ -68,10 +68,12 @@ class NewsController extends Controller
             'title' => 'required',
             'author' => 'required',
             'link_url' => 'nullable',
-            'image' => 'required|mimes:jpg,png,jpeg,svg',
+            'image' => 'nullable',
             'description' => 'required'
         ]);
         $imagePath = null;
+        $newPath = null;
+        $getNews = News::find($request->id);
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = $image->getClientOriginalName();
@@ -101,8 +103,10 @@ class NewsController extends Controller
             } else {
                 return response()->json(['error' => 'Failed to upload image to API.'], 500);
             }
+        } else {
+            $newPath = $getNews ? $getNews->image : null;
         }
-        Log::info($request->all);
+
         $news = News::updateOrCreate(
             ['id' => $request->id],
             [
@@ -110,7 +114,7 @@ class NewsController extends Controller
                 'author' => $request->author,
                 'link_url' => $request->link_url,
                 'description' => $request->description,
-                'image' =>  $this->encryptAESCryptoJS(env('URL_API') . '/' . $imagePath, env('SECRET_KEY_INDOTEK_KEY'))
+                'image' => $newPath != null ? $newPath : $this->encryptAESCryptoJS(env('URL_API') . '/' . $imagePath, env('SECRET_KEY_INDOTEK=='))
             ]
         );
         return response()->json(['success' => 'News saved successfully.']);

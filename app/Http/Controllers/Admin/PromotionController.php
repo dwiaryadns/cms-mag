@@ -32,7 +32,7 @@ class PromotionController extends Controller
                 })
                 ->rawColumns(['description'])
                 ->addColumn('image', function ($row) {
-                    return '<img width="200" src="' . url($this->decryptAESCryptoJS($row->image, env('SECRET_KEY_INDOTEK_KEY'))) . '"/>';
+                    return '<img width="200" src="' . url($this->decryptAESCryptoJS($row->image, env('SECRET_KEY_INDOTEK'))) . '"/>';
                 })
                 ->rawColumns(['image'])
                 ->addColumn('date', function ($row) {
@@ -54,13 +54,14 @@ class PromotionController extends Controller
         $request->validate([
             'title' => 'required',
             'author' => 'required',
-            // 'link_url' => 'nullable',
-            'image' => 'required|mimes:jpg,png,jpeg,svg',
+            'image' => 'nullable',
             'description' => 'required',
             'start_date' => 'required',
             'end_date' => 'required'
         ]);
         $imagePath = null;
+        $newPath = null;
+        $getPromotion = Promotion::find($request->id); // Ambil promosi lama jika ada
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = $image->getClientOriginalName();
@@ -80,10 +81,8 @@ class PromotionController extends Controller
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-
             $response = curl_exec($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
             curl_close($ch);
 
             if ($httpcode == 200) {
@@ -92,6 +91,8 @@ class PromotionController extends Controller
             } else {
                 return response()->json(['error' => 'Failed to upload image to API.'], 500);
             }
+        } else {
+            $newPath = $getPromotion ? $getPromotion->image : null;
         }
         $groupId = explode(',', $request->group_id);
         $memberId = explode(',', $request->member_id);
@@ -109,12 +110,12 @@ class PromotionController extends Controller
                 'title' => $request->title,
                 'author' => $request->author,
                 'description' => $request->description,
-                'image' =>  $this->encryptAESCryptoJS(env('URL_API') . '/' . $imagePath, env('SECRET_KEY_INDOTEK_KEY')),
+                'image' =>  $newPath != null ? $newPath : $this->encryptAESCryptoJS(env('URL_API') . '/' . $imagePath, env('SECRET_KEY_INDOTEK')),
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
-                'group_id' => $this->encryptAESCryptoJS(json_encode($groupId), env('SECRET_KEY_INDOTEK_KEY')),
-                'polis_id' => $this->encryptAESCryptoJS(json_encode($policyNumbers), env('SECRET_KEY_INDOTEK_KEY')),
-                'member_id' => $this->encryptAESCryptoJS(json_encode($memberId), env('SECRET_KEY_INDOTEK_KEY')),
+                'group_id' => $this->encryptAESCryptoJS(json_encode($groupId), env('SECRET_KEY_INDOTEK')),
+                'polis_id' => $this->encryptAESCryptoJS(json_encode($policyNumbers), env('SECRET_KEY_INDOTEK')),
+                'member_id' => $this->encryptAESCryptoJS(json_encode($memberId), env('SECRET_KEY_INDOTEK')),
             ]
         );
         return response()->json(['success' => 'Promotion saved successfully.', 'data' => $promotion]);
