@@ -132,6 +132,11 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
+                                        <a class="dropdown-item" href="{{ route('admin.change.password.view') }}">
+                                            <i class="bx bx-key me-2"></i>
+                                            <span class="align-middle">Change Password</span>
+                                        </a>
+
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                             <i class="bx bx-power-off me-2"></i>

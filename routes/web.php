@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Corcom\IndexController;
 use App\Http\Controllers\Marketing\MarketingController;
 use Illuminate\Support\Facades\Auth;
@@ -25,9 +26,14 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::prefix('admin')->middleware(['auth', 'can:isAdmin'])->name('admin.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('index');
+    Route::get('/change-password-view', function () {
+        return view('auth.change-password');
+    })->name('change.password.view');
+    Route::post('/change-password', [AdminController::class, 'changePassword'])->name('password.change');
     Route::post('/v1/GetGroupList', [App\Http\Controllers\Admin\ApiIndotekController::class, 'getGroupList'])->name('indotek.getGroupList');
     Route::post('/v1/GetGroupPolList', [App\Http\Controllers\Admin\ApiIndotekController::class, 'getGroupPolList'])->name('indotek.getGroupPolList');
     Route::post('/v1/GetGroupPolicyUserList', [App\Http\Controllers\Admin\ApiIndotekController::class, 'getGroupPolicyUserList'])->name('indotek.getGroupPolicyUserList');
+
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
