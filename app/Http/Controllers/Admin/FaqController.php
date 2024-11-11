@@ -33,16 +33,20 @@ class FaqController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category'=> 'required',
-            'question'=> 'required',
-            'answer'=> 'required'
+            'category' => 'required',
+            'question' => 'required',
+            'answer' => 'required',
+            'answer_en' => 'required',
+            'question_en' => 'required',
         ]);
         $faq = Faq::updateOrCreate(
             ['id' => $request->id],
             [
                 'category' => $request->category,
                 'question' => $request->question,
-                'answer' => $request->answer
+                'answer' => $request->answer,
+                'question_en' => $request->question_en,
+                'answer_en' => $request->answer_en,
             ]
         );
         return response()->json(['success' => 'FAQ saved successfully.']);

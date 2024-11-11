@@ -114,7 +114,7 @@ class NewsController extends Controller
                 'author' => $request->author,
                 'link_url' => $request->link_url,
                 'description' => $request->description,
-                'image' => $newPath != null ? $newPath : $this->encryptAESCryptoJS(env('URL_API') . '/' . $imagePath, env('SECRET_KEY_INDOTEK=='))
+                'image' => $newPath != null ? $newPath : $this->encryptAESCryptoJS(env('URL_API') . '/' . $imagePath, env('SECRET_KEY_INDOTEK'))
             ]
         );
         return response()->json(['success' => 'News saved successfully.']);

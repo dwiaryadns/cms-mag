@@ -96,13 +96,25 @@ class PromotionController extends Controller
         }
         $groupId = explode(',', $request->group_id);
         $memberId = explode(',', $request->member_id);
+        Log::info($groupId);
 
         $dataString = $request->polis_id;
+        Log::info('INGFOOOOOOOOO');
         $dataArray = json_decode('[' . $dataString . ']', true);
+        Log::info($dataArray);
 
         $policyNumbers = array_map(function ($item) {
             return trim($item['policyNo']);
         }, $dataArray);
+        Log::info($policyNumbers);
+        $branchId = array_map(function ($item) {
+            return trim($item['branchId']);
+        }, $dataArray);
+        Log::info($branchId);
+        $policyCombine = array_map(function ($item) {
+            return trim($item['policyCombine']);
+        }, $dataArray);
+        Log::info($policyCombine);
 
         $promotion = Promotion::updateOrCreate(
             ['id' => $request->id],
@@ -113,9 +125,11 @@ class PromotionController extends Controller
                 'image' =>  $newPath != null ? $newPath : $this->encryptAESCryptoJS(env('URL_API') . '/' . $imagePath, env('SECRET_KEY_INDOTEK')),
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
+                'branch_id' => $this->encryptAESCryptoJS(json_encode($branchId), env('SECRET_KEY_INDOTEK')),
                 'group_id' => $this->encryptAESCryptoJS(json_encode($groupId), env('SECRET_KEY_INDOTEK')),
                 'polis_id' => $this->encryptAESCryptoJS(json_encode($policyNumbers), env('SECRET_KEY_INDOTEK')),
                 'member_id' => $this->encryptAESCryptoJS(json_encode($memberId), env('SECRET_KEY_INDOTEK')),
+                'policy_combine' => $this->encryptAESCryptoJS(json_encode(str_replace(' ', '', $policyCombine)), env('SECRET_KEY_INDOTEK'))
             ]
         );
         return response()->json(['success' => 'Promotion saved successfully.', 'data' => $promotion]);
@@ -123,7 +137,19 @@ class PromotionController extends Controller
     public function edit($id)
     {
         $promotion = Promotion::find($id);
-        return response()->json($promotion);
+        $data = [
+            'id' => $promotion->id,
+            'title' => $promotion->title,
+            'author' => $promotion->author,
+            'description' => $promotion->description,
+            'start_date' => $promotion->start_date,
+            'end_date' => $promotion->end_date,
+            'branch_id' => json_decode($this->decryptAESCryptoJS($promotion->branch_id, env('SECRET_KEY_INDOTEK'))),
+            'group_id' => json_decode($this->decryptAESCryptoJS($promotion->group_id, env('SECRET_KEY_INDOTEK'))),
+            'polis_id' => json_decode($this->decryptAESCryptoJS($promotion->polis_id, env('SECRET_KEY_INDOTEK'))),
+            'member_id' => json_decode($this->decryptAESCryptoJS($promotion->member_id, env('SECRET_KEY_INDOTEK'))),
+        ];
+        return response()->json($data);
     }
     public function destroy($id)
     {

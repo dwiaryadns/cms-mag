@@ -23,19 +23,34 @@
                     <form id="form">
                         <input type="hidden" name="id" id="id">
                         <div class="mb-3">
-                            <label for="">Category</label>
-                            <input class="form-control" name="category" id="category" placeholder="Enter Category" />
-
+                            <label for="">Category (Indonesia)</label>
+                            <input class="form-control" name="category" id="category"
+                                placeholder="Enter Category (Indonesia)" />
                         </div>
                         <div class="mb-3">
-                            <label for="nameBasic" class="form-label">Question</label>
-                            <textarea class="form-control" placeholder="Enter Question" name="question" id="question"
-                                cols="30" rows="5"></textarea>
+                            <label for="">Category (English)</label>
+                            <input class="form-control" name="category_en" id="category_en"
+                                placeholder="Enter Category (English)" />
                         </div>
                         <div class="mb-3">
-                            <label for="emailBasic" class="form-label">Answer</label>
-                            <textarea class="form-control" placeholder="Enter Answer" name="answer" id="answer"
-                                cols="30" rows="5"></textarea>
+                            <label for="nameBasic" class="form-label">Question (Indonesia)</label>
+                            <textarea class="form-control" placeholder="Enter Question (Indonesia)" name="question"
+                                id="question" cols="30" rows="5"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailBasic" class="form-label">Answer (Indonesia)</label>
+                            <textarea class="form-control" placeholder="Enter Answer (Indonesia)" name="answer"
+                                id="answer" cols="30" rows="5"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nameBasic" class="form-label">Question (English)</label>
+                            <textarea class="form-control" placeholder="Enter Question (English)" name="question_en"
+                                id="question_en" cols="30" rows="5"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailBasic" class="form-label">Answer (English)</label>
+                            <textarea class="form-control" placeholder="Enter Answer (English)" name="answer_en"
+                                id="answer_en" cols="30" rows="5"></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -112,6 +127,9 @@
                 $('#category').val(data.category);
                 $('#question').val(data.question);
                 $('#answer').val(data.answer);
+                $('#category_en').val(data.category_en);
+                $('#question_en').val(data.question_en);
+                $('#answer_en').val(data.answer_en);
             })
         });
 

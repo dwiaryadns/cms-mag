@@ -147,9 +147,11 @@ class ApiIndotekController extends Controller
         Log::info("           ");
         $clientHasId = $appInfo['ClientSecretHash'];
 
+
         $sData = [
-            'UserID' => Auth::user()->email,
-            'GroupId' => $request->groupId,
+            // 'UserID' => Auth::user()->email,
+            'UserID' => 'admin@gmail.com',
+            'GroupId' => 706,
             'PolNoName' => "",
         ];
         $encryptSData = $this->encryptAESCryptoJS(json_encode($sData), env('PRIVATE_KEY'));
@@ -212,11 +214,15 @@ class ApiIndotekController extends Controller
         Log::info("           ");
         $clientHasId = $appInfo['ClientSecretHash'];
 
+        if ($request->memberName) {
+            $policyNoArray = json_decode($request->policyNo[0], true);
+            $policyNo = trim($policyNoArray['policyNo']);
+        }
         $sData = [
             "UserID" => Auth::user()->email,
-            "GroupId" => $request->groupId,
-            "PolicyNo" => $request->policyNo,
-            "MemberName" => ""
+            "GroupId" => $request->memberName ? $request->groupId[0] : $request->groupId,
+            "PolicyNo" =>  $request->memberName ? $policyNo : $request->policyNo,
+            "MemberName" => $request->memberName ?? ""
         ];
         $encryptSData = $this->encryptAESCryptoJS(json_encode($sData), env('PRIVATE_KEY'));
         Log::info('Decrypt sData : ' . $this->decryptAESCryptoJS($encryptSData, env('PRIVATE_KEY')));

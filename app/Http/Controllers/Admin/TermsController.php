@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Terms;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class TermsController extends Controller
@@ -36,15 +37,20 @@ class TermsController extends Controller
 
     public function store(Request $request)
     {
+        Log::info($request->all());
         $request->validate([
-            'type'=> 'required',
-            'description'=> 'required'
+            'type' => 'required',
+            'description' => 'required',
+            'type_en' => 'required',
+            'description_en' => 'required',
         ]);
         $faq = Terms::updateOrCreate(
             ['id' => $request->id],
             [
                 'type' => $request->type,
-                'description' => $request->description
+                'description' => $request->description,
+                'type_en' => $request->type_en,
+                'description_en' => $request->description_en,
             ]
         );
         return response()->json(['success' => 'Terms saved successfully.']);

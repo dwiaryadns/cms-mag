@@ -12,13 +12,14 @@ class Promotion extends Model
     protected $fillable = [
         'title',
         'author',
-        // 'link_url',
         'description',
         'image',
         'start_date',
         'end_date',
         'group_id',
         'polis_id',
-        'member_id'
+        'member_id',
+        'branch_id',
+        'policy_combine'
     ];
 }

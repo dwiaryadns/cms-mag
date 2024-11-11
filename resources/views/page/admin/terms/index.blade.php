@@ -23,12 +23,20 @@
                     <form id="form">
                         <input type="hidden" name="id" id="id">
                         <div class="mb-3">
-                            <label for="emailBasic" class="form-label">Type</label>
+                            <label for="emailBasic" class="form-label">Type (Indonesia)</label>
                             <input id="type" type="text" class="form-control" name="type">
                         </div>
                         <div class="mb-3">
-                            <label for="nameBasic" class="form-label">Description</label>
+                            <label for="nameBasic" class="form-label">Description (Indonesia)</label>
                             <textarea id="description" class="form-control" name="description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailBasic" class="form-label">Type (English)</label>
+                            <input id="type_en" type="text" class="form-control" name="type">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nameBasic" class="form-label">Description (English)</label>
+                            <textarea id="description_en" class="form-control" name="description"></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -89,7 +97,7 @@
 
     $(document).ready(function() {
         $('#description').summernote(  {
-        placeholder: 'Description',
+        placeholder: 'Description (Indonesia)',
         tabsize: 2,
         height: 120,
         toolbar: [
@@ -104,7 +112,41 @@
         ['table', ['table']],
         ['insert', ['link', 'picture', 'video']],
         ['view', ['fullscreen', 'codeview', 'help']]
-        ]
+        ],
+        callbacks: {
+            onPaste: function (e) {
+                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                e.preventDefault();
+                document.execCommand('insertText', false, bufferText);
+            }
+        }
+    });
+    })
+    $(document).ready(function() {
+        $('#description_en').summernote(  {
+        placeholder: 'Description (English)',
+        tabsize: 2,
+        height: 120,
+        toolbar: [
+        ['style', ['style']],
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        ['fontname', ['fontname']],
+        ['table', ['table']],
+        ['insert', ['link', 'picture', 'video']],
+        ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        callbacks: {
+            onPaste: function (e) {
+                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                e.preventDefault();
+                document.execCommand('insertText', false, bufferText);
+            }
+        }
     });
     })
     var table = $('#datatable').DataTable({
@@ -148,6 +190,8 @@
                 $('#id').val(data.id);
                 $('#type').val(data.type);
                 $("#description").summernote("code",data.description);
+                $('#type_en').val(data.type_en);
+                $("#description_en").summernote("code",data.description_en);
             })
         });
 
@@ -159,7 +203,9 @@
             data: {
                 id: $("#id").val(),
                 type: $("#type").val(),
-                description: $('#description').summernote('code')
+                description: $('#description').summernote('code'),
+                type_en: $("#type_en").val(),
+                description_en: $('#description_en').summernote('code'),
             },
             url: "{{ route('admin.terms.store') }}",
             type: "POST",
