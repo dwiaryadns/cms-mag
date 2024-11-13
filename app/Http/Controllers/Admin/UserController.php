@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -48,6 +49,13 @@ class UserController extends Controller
     }
     public function store(Request $request)
     {
+        Log::info($request->all());
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'role' => 'required',
+            'password' => 'required',
+        ]);
         $user = User::updateOrCreate(
             ['id' => $request->id],
             [
@@ -55,6 +63,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'role' => $request->role,
                 'password' => bcrypt($request->password),
+                'secret_key' => $request->secret_key
             ]
         );
         return response()->json(['success' => 'User saved successfully.']);

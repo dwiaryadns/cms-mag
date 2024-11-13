@@ -26,13 +26,12 @@
                         <div class="mb-3">
                             <label for="">Name</label>
                             <input class="form-control" name="name" id="name" placeholder="Enter Name" />
-
                         </div>
                         <div class="mb-3">
                             <label for="">Email</label>
                             <input class="form-control" name="email" id="email" placeholder="Enter Email" />
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" id="wrap-pass">
                             <label for="">Password</label>
                             <input type="password" class="form-control" name="password" id="password"
                                 placeholder="Enter Password" />
@@ -43,7 +42,13 @@
                                 <option value="admin">Admin</option>
                                 <option value="marketing">Marketing</option>
                                 <option value="user">User</option>
+                                <option value="api">API (credential API)</option>
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="">Secret Key (Optional - Credential API)</label>
+                            <input class="form-control" name="secret_key" id="secret_key"
+                                placeholder="Enter Secret Key" />
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -125,6 +130,7 @@
             $('#form').trigger("reset");
             $('#modal-title').html("Add User");
             $('#modal').modal('show');
+            $('#wrap-pass').show();
         });
 
         $(document).on('click', '.edit-user', function () {
@@ -136,9 +142,10 @@
                 $('#modal-title').html("Edit User");
                 $('#savedata').html('Save'); 
                 $('#id').val(data.id);
-                $('#category').val(data.category);
-                $('#question').val(data.question);
-                $('#answer').val(data.answer);
+                $('#name').val(data.name);
+                $('#email').val(data.email);
+                $('#secret_key').val(data.secret_key);
+                $('#wrap-pass').hide();
             })
         });
 
